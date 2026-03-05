@@ -1,0 +1,12 @@
+[project]
+name = "xstream-searcher"
+version = "0.1.0"
+description = "A TUI that can search an XStream Codes API."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "blessed>=1.32.0",
+    "keyring>=25.7.0",
+    "requests>=2.32.5",
+    "tomli-w>=1.2.0",
+]
