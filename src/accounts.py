@@ -136,7 +136,7 @@ def load_settings() -> dict:
         "cache_hours": settings.get("cache_hours", DEFAULT_CACHE_HOURS),
         "default_search_terms": settings.get("default_search_terms", []),
         "default_blacklist": settings.get("default_blacklist", []),
-        "select_action": settings.get("select_action", "iina")
+        "select_action": settings.get("select_action", "copy")
     }
 
 

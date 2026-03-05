@@ -81,7 +81,8 @@ def render(state: AppState, current_input: str, editing_field: str, message: str
     action_color = term.bold_cyan if editing_field == "select_action" else term.normal
     print(term.move_xy(0, y) + action_color + "Select Action: " + term.normal + f"{state.select_action}")
     if editing_field == "select_action":
-        print(term.move_xy(0, y + 1) + f"> {current_input}_")
+        print(term.move_xy(0, y + 1) + term.dim + "  (options: copy, iina, mpc - comma-separated)" + term.normal)
+        print(term.move_xy(0, y + 2) + f"> {current_input}_")
 
 
 def run(state: AppState) -> None:
@@ -197,13 +198,9 @@ def run(state: AppState) -> None:
             elif editing_field == "select_action":
                 if current_input.strip():
                     action = current_input.strip().lower()
-                    if action in ("iina", "copy", "both"):
-                        state.select_action = action
-                        current_input = ""
-                        message = f"Select action set to: {action}"
-                    else:
-                        message = "Error: Must be 'iina', 'copy', or 'both'"
-                        current_input = ""
+                    state.select_action = action
+                    current_input = ""
+                    message = f"Select action set to: {action}"
                 else:
                     # Save and exit
                     accounts.save_settings(

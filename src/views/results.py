@@ -1,5 +1,6 @@
 import subprocess
-import os
+import pyperclip
+
 from blessed import Terminal
 from src.state import AppState
 from src.search_logic import SearchTerms, search
@@ -14,13 +15,16 @@ def action_on_enter(account: Account, streams: list[Stream], index: int, select_
 
     url = streams[index].url(account)
 
-    if select_action == "iina":
-        subprocess.run(["open", "-a", "IINA", url])
-    elif select_action == "copy":
-        subprocess.run(["pbcopy"], input=url.encode(), check=True)
-    elif select_action == "both":
-        subprocess.run(["open", "-a", "IINA", url])
-        subprocess.run(["pbcopy"], input=url.encode(), check=True)
+    # Parse comma-separated actions
+    actions = [action.strip() for action in select_action.split(",")]
+
+    for action in actions:
+        if action == "iina":
+            subprocess.run(["open", "-a", "IINA", url])
+        elif action == "copy":
+            pyperclip.copy(url)
+        elif action == "mpc":
+            subprocess.run(["mpc-hc.exe", url])
 
 def render(streams: list[Stream], selected: int, scroll_offset: int, max_show: int, green: bool) -> None:
     print(term.move_xy(0, 0) + term.clear)
