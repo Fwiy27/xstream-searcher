@@ -2,6 +2,7 @@ import shlex
 from blessed import Terminal
 from src.state import AppState
 from src import accounts
+from src.ui_helpers import render_help_text
 
 term = Terminal()
 
@@ -34,7 +35,7 @@ def render(state: AppState, current_input: str, editing_field: str, message: str
     print(term.clear())
 
     # Instructions
-    print(term.move_xy(0, term.height - 4) + term.center("(tab) next field   (enter) save   (r) clear cache   (esc) cancel"))
+    render_help_text(term, "(tab) next field", "(enter) save", "(r) clear cache", "(esc) cancel", y_offset=4)
 
     if message:
         print(term.move_xy(0, term.height - 2) + term.center(term.green(message)))

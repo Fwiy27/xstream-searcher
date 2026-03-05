@@ -1,6 +1,7 @@
 import shlex
 from blessed import Terminal
 from src.state import AppState
+from src.ui_helpers import render_help_text
 
 term = Terminal()
 
@@ -36,7 +37,7 @@ def render(state: AppState, current_input: str) -> None:
     print(term.clear())
 
     print(term.move_xy(0, term.height - 4) + term.center(f"(Account: {state.active_account.name})  (streams) {len(state.active_account.get_streams())}  (expires) {state.active_account.get_expiration()}"))
-    print(term.move_xy(0, term.height - 2) + term.center("(enter) confirm   (-term) blacklist   (r) reset to defaults   (esc) select account"))
+    render_help_text(term, "(enter) confirm", "(-term) blacklist", "(r) reset to defaults", "(esc) select account")
 
     print(term.move_xy(0, 0) + "Include: " + (term.green(",".join(state.search_terms)) if state.search_terms else "none"))
 

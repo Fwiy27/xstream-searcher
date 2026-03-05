@@ -5,6 +5,7 @@ from src.accounts import Account
 class AppState:
     accounts: list[Account] = field(default_factory=list)
     active_account: Account | None = None
+    account_to_edit: Account | None = None
     search_terms: list[str] = field(default_factory=list)
     blacklist: list[str] = field(default_factory=list)
     results: list = field(default_factory=list)

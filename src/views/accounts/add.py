@@ -1,5 +1,6 @@
 from blessed import Terminal
 from src.accounts import save_account, name_exists
+from src.ui_helpers import render_help_text
 
 term = Terminal()
 
@@ -29,7 +30,7 @@ def run(state) -> None:
     print(term.clear())
     print(term.move_xy(0, 0) + "Add Account")
     print(term.move_xy(0, 1) + "Press enter to confirm each field")
-    print(term.move_xy(0, term.height - 2) + term.center("(esc) cancel"))
+    render_help_text(term, "(esc) cancel")
 
     while True:
         name = _read_field("Account name", 2)

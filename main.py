@@ -1,6 +1,8 @@
 from blessed import Terminal
 from src.state import AppState
-from src.views import account_select, account_add, search_config, results, settings
+from src.views.accounts import add as account_add, edit as account_edit, select as account_select
+from src.views.search import config as search_config, results
+from src.views import settings
 from src import accounts
 
 term = Terminal()
@@ -21,6 +23,7 @@ def main():
     view_map = {
         "account_select": account_select.run,
         "account_add":    account_add.run,
+        "account_edit":   account_edit.run,
         "search_config":  search_config.run,
         "results":        results.run,
         "settings":       settings.run,

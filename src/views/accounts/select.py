@@ -1,6 +1,7 @@
 from blessed import Terminal
 from src.accounts import Account, load_accounts, delete_account
 from src.state import AppState
+from src.ui_helpers import render_help_text
 
 term = Terminal()
 
@@ -13,7 +14,7 @@ def load_account_information(account: Account) -> None:
 def render(accounts: list[Account], selected: int, is_deleting: bool) -> None:
     print(term.clear())
 
-    print(term.move_xy(0,term.height - 2) + term.center("(↑↓) navigate   (enter) select   (e) edit   (d) delete   (s) settings   (escape) quit"))
+    render_help_text(term, "(↑↓) navigate", "(enter) select", "(e) edit", "(d) delete", "(s) settings", "(escape) quit")
 
     print(term.move_xy(0, 0) + "Select an account:")
 

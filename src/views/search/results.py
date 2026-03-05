@@ -5,6 +5,7 @@ from blessed import Terminal
 from src.state import AppState
 from src.search_logic import SearchTerms, search
 from src.accounts import Stream, Account
+from src.ui_helpers import render_help_text
 
 term = Terminal()
 PREFIX_WIDTH = 6  # "[NNN] " prefix width
@@ -29,7 +30,7 @@ def action_on_enter(account: Account, streams: list[Stream], index: int, select_
 def render(streams: list[Stream], selected: int, scroll_offset: int, max_show: int, green: bool) -> None:
     print(term.move_xy(0, 0) + term.clear)
 
-    print(term.move_xy(0, term.height - 2) + term.center("(enter) select   (esc) edit search"))
+    render_help_text(term, "(enter) select", "(esc) edit search")
     print(term.move_xy(0, 0) + "Choose a stream:")
     visible = streams[scroll_offset : scroll_offset + max_show]
     max_name_len = term.width - PREFIX_WIDTH
