@@ -13,6 +13,7 @@ def main():
     state.cache_hours = saved_settings["cache_hours"]
     state.default_search_terms = saved_settings["default_search_terms"]
     state.default_blacklist = saved_settings["default_blacklist"]
+    state.select_action = saved_settings["select_action"]
     # Initialize search terms with defaults
     state.search_terms = state.default_search_terms.copy()
     state.blacklist = state.default_blacklist.copy()

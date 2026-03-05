@@ -128,18 +128,19 @@ def load_settings() -> dict:
     """Load settings from config file.
 
     Returns:
-        dict with keys: cache_hours, default_search_terms, default_blacklist
+        dict with keys: cache_hours, default_search_terms, default_blacklist, select_action
     """
     config = _load_config()
     settings = config.get("settings", {})
     return {
         "cache_hours": settings.get("cache_hours", DEFAULT_CACHE_HOURS),
         "default_search_terms": settings.get("default_search_terms", []),
-        "default_blacklist": settings.get("default_blacklist", [])
+        "default_blacklist": settings.get("default_blacklist", []),
+        "select_action": settings.get("select_action", "iina")
     }
 
 
-def save_settings(cache_hours: float, default_search_terms: list[str], default_blacklist: list[str]) -> None:
+def save_settings(cache_hours: float, default_search_terms: list[str], default_blacklist: list[str], select_action: str) -> None:
     """Save settings to config file."""
     config = _load_config()
     if "settings" not in config:
@@ -148,6 +149,7 @@ def save_settings(cache_hours: float, default_search_terms: list[str], default_b
     config["settings"]["cache_hours"] = cache_hours
     config["settings"]["default_search_terms"] = default_search_terms
     config["settings"]["default_blacklist"] = default_blacklist
+    config["settings"]["select_action"] = select_action
 
     _save_config(config)
 

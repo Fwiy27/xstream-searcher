@@ -8,10 +8,19 @@ from src.accounts import Stream, Account
 term = Terminal()
 PREFIX_WIDTH = 6  # "[NNN] " prefix width
 
-def action_on_enter(account: Account, streams: list[Stream], index: int) -> None:
+def action_on_enter(account: Account, streams: list[Stream], index: int, select_action: str) -> None:
     if (0 > index or index >= len(streams)):
         return
-    subprocess.run(["open", "-a", "IINA", streams[index].url(account)])
+
+    url = streams[index].url(account)
+
+    if select_action == "iina":
+        subprocess.run(["open", "-a", "IINA", url])
+    elif select_action == "copy":
+        subprocess.run(["pbcopy"], input=url.encode(), check=True)
+    elif select_action == "both":
+        subprocess.run(["open", "-a", "IINA", url])
+        subprocess.run(["pbcopy"], input=url.encode(), check=True)
 
 def render(streams: list[Stream], selected: int, scroll_offset: int, max_show: int, green: bool) -> None:
     print(term.move_xy(0, 0) + term.clear)
@@ -81,7 +90,7 @@ def run(state: AppState):
                     scroll_offset += 1
         elif key.name == "KEY_ENTER":
             actual_index = scroll_offset + selected
-            action_on_enter(state.active_account, result, actual_index)
+            action_on_enter(state.active_account, result, actual_index, state.select_action)
             action_performed = True
         elif key.name == "KEY_ESCAPE":
             state.current_view = "search_config"

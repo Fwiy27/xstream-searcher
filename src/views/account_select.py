@@ -12,11 +12,13 @@ def load_account_information(account: Account) -> None:
 
 def render(accounts: list[Account], selected: int, is_deleting: bool) -> None:
     print(term.clear())
+
+    print(term.move_xy(0,term.height - 2) + term.center("(↑↓) navigate   (enter) select   (d) delete   (s) settings   (escape) quit"))
+
     print(term.move_xy(0, 0) + "Select an account:")
 
     options = [a.name for a in accounts] + ["+ Add new account"]
 
-    print(term.move_xy(0,term.height - 2) + term.center("(↑↓) navigate   (enter) select   (d) delete   (s) settings"))
 
     start_x = 0
     start_y = 1
@@ -46,6 +48,10 @@ def run(state: AppState) -> None:
 
     while True:
         key = term.inkey()
+
+        # Check if user is quitting app
+        if key.name == "KEY_ESCAPE":
+            quit()
 
         # Clear deleting status if not "d" again
         if key != "d":

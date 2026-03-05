@@ -13,3 +13,4 @@ class AppState:
     cache_hours: float = 12.0
     default_search_terms: list[str] = field(default_factory=list)
     default_blacklist: list[str] = field(default_factory=list)
+    select_action: str = "copy"
