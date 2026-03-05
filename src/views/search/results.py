@@ -128,7 +128,9 @@ def run(state: AppState):
 
     render(result, selected, scroll_offset, max_show, action_performed, resolutions, fetching)
     while True:
-        key = term.inkey(timeout=0.2)  # Check for updates every 200ms
+        # Only use timeout when actively fetching resolutions to avoid input lag
+        timeout = 0.2 if fetching else None
+        key = term.inkey(timeout=timeout)
 
         # Only re-render on timeout if something actually changed
         if not key:
