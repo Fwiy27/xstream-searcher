@@ -13,7 +13,7 @@ term = Terminal()
 PREFIX_WIDTH = 6  # "[NNN] " prefix width
 
 
-def fetch_resolution(account: Account, stream: Stream, resolutions: dict, stream_id: str) -> None:
+def fetch_resolution(account: Account, stream: Stream, resolutions: dict, stream_id: str, fetching: set, needs_render: list) -> None:
     """Fetch resolution info for a stream using ffprobe in a background thread."""
     try:
         url = stream.url(account)
@@ -53,6 +53,9 @@ def fetch_resolution(account: Account, stream: Stream, resolutions: dict, stream
         resolutions[stream_id] = "no ffprobe"
     except Exception:
         resolutions[stream_id] = "error"
+    finally:
+        fetching.discard(stream_id)
+        needs_render[0] = True  # Signal that a re-render is needed
 
 def action_on_enter(account: Account, streams: list[Stream], index: int, select_action: str) -> None:
     if (0 > index or index >= len(streams)):
@@ -121,14 +124,17 @@ def run(state: AppState):
     # Track resolution info
     resolutions: dict[str, str] = {}  # stream_id -> resolution string
     fetching: set[str] = set()  # stream_ids currently being fetched
+    needs_render = [False]  # Mutable flag to signal re-render needed
 
     render(result, selected, scroll_offset, max_show, action_performed, resolutions, fetching)
     while True:
-        key = term.inkey(timeout=0.1)  # Add timeout for periodic re-renders
+        key = term.inkey(timeout=0.2)  # Check for updates every 200ms
 
+        # Only re-render on timeout if something actually changed
         if not key:
-            # Timeout - just re-render to update any new resolution info
-            render(result, selected, scroll_offset, max_show, action_performed, resolutions, fetching)
+            if needs_render[0]:
+                needs_render[0] = False
+                render(result, selected, scroll_offset, max_show, action_performed, resolutions, fetching)
             continue
 
         action_performed = False
@@ -143,17 +149,13 @@ def run(state: AppState):
                 stream = result[actual_index]
                 if stream.stream_id not in resolutions and stream.stream_id not in fetching:
                     fetching.add(stream.stream_id)
+                    needs_render[0] = True  # Trigger re-render to show loading indicator
                     thread = threading.Thread(
                         target=fetch_resolution,
-                        args=(state.active_account, stream, resolutions, stream.stream_id),
+                        args=(state.active_account, stream, resolutions, stream.stream_id, fetching, needs_render),
                         daemon=True
                     )
                     thread.start()
-                    # Also remove from fetching set once done (will be handled by periodic render)
-                    def cleanup():
-                        thread.join()
-                        fetching.discard(stream.stream_id)
-                    threading.Thread(target=cleanup, daemon=True).start()
         elif key.name == "KEY_UP":
             if selected > 0:
                 selected -= 1
