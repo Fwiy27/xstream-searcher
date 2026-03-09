@@ -85,7 +85,7 @@ def render(streams: list[Stream], selected: int, scroll_offset: int, max_show: i
         actual_index = scroll_offset + i
 
         # Build prefix with resolution info
-        prefix = f"[{actual_index}]"
+        prefix = f"[{actual_index}|{stream.stream_id}]"
 
         # Add resolution if available
         if stream.stream_id in resolutions:
